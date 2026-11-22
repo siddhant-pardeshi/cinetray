@@ -1,0 +1,561 @@
+/* CineTray injected styles. Every class is ct-prefixed so nothing
+   collides with YouTube's own stylesheet. */
+
+:root {
+  --ct-accent: #ff4d6d;
+  --ct-ink: #0b0c10;
+  --ct-glass: rgba(17, 17, 24, 0.86);
+  --ct-line: rgba(255, 255, 255, 0.09);
+  --ct-text: #f2f2f5;
+  --ct-dim: rgba(242, 242, 245, 0.55);
+  --ct-z-veil: 2147483000;
+  --ct-z-dock: 2147483400;
+  --ct-z-ghost: 2147483600;
+  --ct-z-toast: 2147483600;
+}
+
+html.ct-drag-active {
+  cursor: grabbing !important;
+}
+
+html.ct-drag-active body,
+html.ct-drag-active body * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Page veil while a card is in the air */
+html.ct-drag-active::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--ct-z-veil);
+  background:
+    radial-gradient(120% 90% at calc(var(--ct-dock-x, 50%) ) 50%, rgba(0, 0, 0, 0) 30%, rgba(5, 6, 10, 0.38) 100%);
+  animation: ct-veil-in 260ms ease-out;
+}
+
+@keyframes ct-veil-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --------------------------------------------------------------- dock */
+
+.ct-dock {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 236px;
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 12px 12px;
+  box-sizing: border-box;
+  background: var(--ct-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid var(--ct-line);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  z-index: var(--ct-z-dock);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(.2, .7, .3, 1), transform 260ms cubic-bezier(.2, .8, .3, 1.15);
+}
+
+.ct-dock.ct-right { right: 18px; }
+.ct-dock.ct-left { left: 18px; }
+
+.ct-dock.ct-right { transform: translateY(-50%) translateX(26px); }
+.ct-dock.ct-left { transform: translateY(-50%) translateX(-26px); }
+
+.ct-dock.ct-show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) translateX(0);
+}
+
+.ct-dock::after {
+  /* slow ambient sheen so the dock reads as alive even before any hover */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.05) 50%, transparent 58%);
+  background-size: 260% 100%;
+  animation: ct-sheen 5.5s linear infinite;
+}
+
+@keyframes ct-sheen {
+  from { background-position: 130% 0; }
+  to { background-position: -130% 0; }
+}
+
+.ct-dock__head {
+  padding: 2px 6px 8px;
+  border-bottom: 1px solid var(--ct-line);
+}
+
+.ct-dock__title {
+  font: 600 12.5px/1 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ct-dim);
+}
+
+.ct-dock__wells {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  max-height: calc(78vh - 60px);
+  padding: 8px 2px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+.ct-dock__wells::-webkit-scrollbar { width: 6px; }
+.ct-dock__wells::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.16); border-radius: 3px; }
+
+/* --------------------------------------------------------------- wells */
+
+.ct-well {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: grab;
+  opacity: 0;
+  transform: translateX(30px);
+  transition:
+    transform 300ms cubic-bezier(.2, .8, .3, 1.2),
+    opacity 240ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.ct-dock.ct-show .ct-well {
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: calc(var(--i, 0) * 38ms);
+}
+
+.ct-dock:not(.ct-show) .ct-well {
+  transition-delay: 0ms;
+}
+
+.ct-well__stack {
+  position: relative;
+  width: 52px;
+  height: 34px;
+  flex: 0 0 52px;
+}
+
+.ct-well__thumb {
+  position: absolute;
+  inset: 0;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  transform: translate(calc(var(--stack, 0) * 4px), calc(var(--stack, 0) * -4px)) rotate(calc(var(--stack, 0) * 2deg));
+  transition: transform 220ms cubic-bezier(.2, .8, .3, 1.2);
+}
+
+.ct-well__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ct-well__thumb--empty {
+  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 6px, rgba(255, 255, 255, 0.02) 6px 12px);
+}
+
+.ct-well__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ct-well__name {
+  font: 500 13px/1.25 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ct-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ct-well__count {
+  align-self: flex-start;
+  font: 600 10.5px/1 "Segoe UI", Roboto, sans-serif;
+  color: var(--ct-dim);
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.ct-well__count.ct-pop {
+  animation: ct-pop 420ms cubic-bezier(.2, .8, .3, 1.4);
+}
+
+@keyframes ct-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); background: var(--accent, var(--ct-accent)); color: #fff; }
+  100% { transform: scale(1); }
+}
+
+/* hover state driven from JS so the ghost's pointer owns the coordinates */
+.ct-well.ct-hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: color-mix(in srgb, var(--accent, var(--ct-accent)) 55%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent, var(--ct-accent)) 45%, transparent),
+    0 6px 24px color-mix(in srgb, var(--accent, var(--ct-accent)) 26%, transparent);
+  transform: translate(calc(var(--mx, 0) * 1px), calc(var(--my, 0) * 1px)) scale(1.05);
+}
+
+.ct-well.ct-hover .ct-well__thumb {
+  transform: translate(calc(var(--stack, 0) * 1px), calc(var(--stack, 0) * -1px));
+}
+
+/* the moment the card lands */
+.ct-well.ct-well--pulse {
+  animation: ct-swallow 680ms cubic-bezier(.3, .7, .3, 1);
+}
+
+@keyframes ct-swallow {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.94); }
+  62% { transform: scale(1.07); box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); }
+  100% { transform: scale(1); }
+}
+
+.ct-well.ct-well--dupe {
+  animation: ct-shake 420ms ease;
+}
+
+@keyframes ct-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  55% { transform: translateX(4px); }
+  80% { transform: translateX(-2px); }
+}
+
+/* primary well (Watch Later) gets the accent treatment */
+.ct-well--primary {
+  border-color: color-mix(in srgb, var(--accent) 35%, rgba(255, 255, 255, 0.08));
+  background: linear-gradient(180deg, rgba(255, 77, 109, 0.10), rgba(255, 77, 109, 0.04));
+}
+
+.ct-well--primary .ct-well__stack {
+  width: 56px;
+  height: 36px;
+  flex: 0 0 56px;
+}
+
+.ct-well--primary::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  top: -7px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 60%, transparent), transparent);
+  opacity: 0.7;
+}
+
+/* new playlist well */
+.ct-well--new {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.18);
+  background: transparent;
+  flex-wrap: wrap;
+  min-height: 44px;
+}
+
+.ct-well__newlabel {
+  font: 500 13px/1 "Segoe UI", Roboto, sans-serif;
+  color: var(--ct-dim);
+  padding-left: 2px;
+}
+
+.ct-well__input {
+  display: none;
+  flex: 1 1 100%;
+  margin-top: 6px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ct-text);
+  font: 400 13px/1.2 "Segoe UI", Roboto, sans-serif;
+  outline: none;
+}
+
+.ct-well__input:focus {
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.ct-well--new.ct-new-open .ct-well__newlabel { display: none; }
+.ct-well--new.ct-new-open .ct-well__input { display: block; }
+
+/* ---------------------------------------------------------- ghost card */
+
+.ct-ghost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--ct-z-ghost);
+  pointer-events: none;
+  background: #101018;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform-origin: center;
+}
+
+.ct-ghost.ct-ghost--in {
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+
+.ct-ghost__thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.ct-ghost__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ct-ghost__duration {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  font: 600 10.5px/1 "Segoe UI", Roboto, sans-serif;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+.ct-ghost__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 11px 11px;
+}
+
+.ct-ghost__title {
+  font: 500 13px/1.3 "Segoe UI", Roboto, sans-serif;
+  color: var(--ct-text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ct-ghost__title--channel {
+  font-size: 11.5px;
+  color: var(--ct-dim);
+  -webkit-line-clamp: 1;
+}
+
+/* the empty slot left behind by the lifted card */
+.ct-source-lifted {
+  opacity: 0.32;
+  filter: saturate(0.4);
+  outline: 1.5px dashed color-mix(in srgb, var(--ct-accent) 65%, transparent);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* --------------------------------------------------------------- burst */
+
+.ct-burst {
+  position: fixed;
+  z-index: calc(var(--ct-z-ghost) - 10);
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.ct-burst i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--sz, 4px);
+  height: var(--sz, 4px);
+  border-radius: 2px;
+  background: var(--accent, var(--ct-accent));
+  animation: ct-spark var(--d, 600ms) cubic-bezier(.15, .65, .35, 1) forwards;
+}
+
+@keyframes ct-spark {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  70% { opacity: 0.9; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+}
+
+/* --------------------------------------------------------------- toast */
+
+.ct-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translate(-50%, 22px) scale(0.96);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(14, 15, 21, 0.92);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  color: var(--ct-text);
+  font: 500 13px/1 "Segoe UI", Roboto, sans-serif;
+  z-index: var(--ct-z-toast);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 320ms cubic-bezier(.2, .8, .3, 1.3), opacity 220ms ease;
+}
+
+.ct-toast.ct-show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0) scale(1);
+}
+
+.ct-toast__check {
+  color: var(--ct-accent);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.ct-toast.ct-show .ct-toast__check {
+  animation: ct-draw 460ms 120ms cubic-bezier(.3, .7, .3, 1) forwards;
+}
+
+@keyframes ct-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.ct-toast--error .ct-toast__check { display: none; }
+.ct-toast--error::before {
+  content: '!';
+  font-weight: 700;
+  color: #ffb02e;
+}
+
+.ct-toast__undo {
+  border: 0;
+  background: transparent;
+  color: #7fb4ff;
+  font: 600 12.5px/1 "Segoe UI", Roboto, sans-serif;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
+
+.ct-toast__undo:hover { background: rgba(127, 180, 255, 0.12); }
+
+/* ---------------------------------------------------------- hover chip */
+
+.ct-chip-host { position: relative; }
+
+.ct-chip {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(12, 13, 18, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 3;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: transform 220ms cubic-bezier(.2, .8, .3, 1.4), opacity 160ms ease, background 150ms ease;
+  pointer-events: none;
+}
+
+.ct-chip::before,
+.ct-chip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: #fff;
+  border-radius: 1px;
+  transition: transform 200ms ease, opacity 150ms ease;
+}
+
+.ct-chip::before { width: 12px; height: 2px; transform: translate(-50%, -50%); }
+.ct-chip::after { width: 2px; height: 12px; transform: translate(-50%, -50%); }
+
+.ct-chip--show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.ct-chip:hover {
+  transform: scale(1.14);
+  background: var(--ct-accent);
+}
+
+.ct-chip--done { background: var(--ct-accent); }
+.ct-chip--done::before { transform: translate(-50%, -50%) rotate(45deg); width: 6px; }
+.ct-chip--done::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+  width: 2px;
+  height: 10px;
+}
+
+/* -------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-dock,
+  .ct-well,
+  .ct-ghost,
+  .ct-toast,
+  .ct-burst i,
+  .ct-chip {
+    animation: none !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+html.ct-anim-off .ct-dock,
+html.ct-anim-off .ct-well,
+html.ct-anim-off .ct-ghost,
+html.ct-anim-off .ct-toast,
+html.ct-anim-off .ct-burst i,
+html.ct-anim-off .ct-chip {
+  animation: none !important;
+  transition-duration: 1ms !important;
+}
+
+html.ct-anim-off::before { display: none; }

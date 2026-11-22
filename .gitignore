@@ -1,0 +1,6 @@
+# test artifacts and local junk
+tools/smoke/out/
+.mimosa/
+*.zip
+.DS_Store
+Thumbs.db
