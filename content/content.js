@@ -70,6 +70,8 @@
     m = url.match(/youtu\.be\/([\w-]{11})/);
     if (m) return m[1];
     m = url.match(/\/shorts\/([\w-]{11})/);
+    if (m) return m[1];
+    m = url.match(/\/live\/([\w-]{11})/);
     return m ? m[1] : null;
   }
 
@@ -140,7 +142,7 @@
 
   /* ------------------------------------------------------- dock and wells */
 
-  const ui = { dock: null, wells: null, toast: null, toastTimer: 0 };
+  const ui = { dock: null, wells: null, toast: null, toastTimer: 0, chip: null };
   let playlistsCache = [];
 
   function ensureDock() {
@@ -176,7 +178,7 @@
   }
 
   function wellStackHtml(videos) {
-    const thumbs = videos.slice(0, 3).map((v, i) =>
+    const thumbs = videos.filter(v => v && v.thumb).slice(0, 3).map((v, i) =>
       '<span class="ct-well__thumb" style="--stack:' + i + '">' +
       '<img src="' + escapeHtml(v.thumb) + '" alt="" loading="lazy">' +
       '</span>').join('');
@@ -202,10 +204,11 @@
 
     const prevHover = session && session.hoverWell ? session.hoverWell.dataset.playlist : null;
     ui.wells.innerHTML = html;
-    if (prevHover) {
-      const again = ui.wells.querySelector('[data-playlist="' + prevHover + '"]');
-      if (again) setHoverWell(again);
-    }
+    // The old hover node was just replaced; re-anchor it (or clear it) so no
+    // stale detached element survives into the drop logic.
+    const again = prevHover ? ui.wells.querySelector('[data-playlist="' + prevHover + '"]') : null;
+    if (again) setHoverWell(again);
+    else if (session && session.hoverWell) setHoverWell(null);
   }
 
   function wellHtml(p, index) {
@@ -416,6 +419,7 @@
   /* --------------------------------------------------------- drag engine */
 
   function armDrag(e, card, video, holdMs) {
+    suppressNextClick = false;
     session = {
       pointerId: e.pointerId,
       pointerType: e.pointerType,
@@ -525,6 +529,16 @@
     return el && el.closest ? el.closest('.ct-well[data-playlist], .ct-well[data-new]') : null;
   }
 
+  // Wells are re-rendered whenever storage answers; a hover reference can end
+  // up detached. Re-anchor to the live node before using it.
+  function connectedWell(well) {
+    if (!well) return null;
+    if (well.isConnected) return well;
+    return ui.wells && well.dataset.playlist
+      ? ui.wells.querySelector('[data-playlist="' + well.dataset.playlist + '"]')
+      : null;
+  }
+
   function onPointerMove(e) {
     const s = session;
     if (!s || e.pointerId !== s.pointerId) return;
@@ -551,7 +565,7 @@
       return;
     }
     suppressNextClick = true;
-    const well = hitTestAt(e.clientX, e.clientY) || s.hoverWell;
+    const well = connectedWell(hitTestAt(e.clientX, e.clientY) || s.hoverWell);
     if (well && well.dataset.playlist && !s.dropDone) {
       dropIntoPlaylist(well);
     } else if (well && well.dataset.new) {
@@ -590,6 +604,7 @@
     const s = session;
     if (!s || s.dropDone) return;
     s.dropDone = true;
+    well = connectedWell(well) || well;
     const rect = well.getBoundingClientRect();
     const accent = well.style.getPropertyValue('--accent') || '#ff4d6d';
 
@@ -690,6 +705,30 @@
     if (session && !session.fromPlayer) e.preventDefault();
   }, true);
 
+  // Cancel paths: Escape, and a pointer that leaves the window mid-drag
+  // (no pointerup arrives there, so the drag would otherwise hang).
+  window.addEventListener('blur', () => {
+    const s = session;
+    if (!s) return;
+    clearTimeout(holdTimer);
+    if (s.lifted) flyBack();
+    else finishSession();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || !session) return;
+    if (e.target && e.target.closest && e.target.closest('.ct-well__input')) return;
+    clearTimeout(holdTimer);
+    if (session.lifted) flyBack();
+    else finishSession();
+  });
+
+  // Once the card is lifted on touch, finger movement must not hand the
+  // gesture over to page scrolling (which would fire pointercancel).
+  document.addEventListener('touchmove', e => {
+    if (session && session.lifted) e.preventDefault();
+  }, { passive: false });
+
   window.addEventListener('pointerdown', onPointerDown, true);
 
   function onPointerDown(e) {
@@ -715,7 +754,11 @@
 
   /* ------------------------------------------------------------ the chip */
 
+  // The chip lives on documentElement rather than inside the card: YouTube's
+  // hover preview mounts a floating player above the card's subtree, and any
+  // chip inside the card loses the hit-test to it.
   document.addEventListener('mouseover', e => {
+    if (e.target.closest && e.target.closest('.ct-chip')) return;
     const card = e.target.closest && e.target.closest(CARD_SELECTORS);
     if (card !== chipCard) {
       clearChip();
@@ -727,40 +770,58 @@
   });
 
   document.addEventListener('mouseout', e => {
+    if (e.target.closest && e.target.closest('.ct-chip')) return;
     const card = e.target.closest && e.target.closest(CARD_SELECTORS);
     if (chipCard && (!card || card !== chipCard)) clearChip();
   });
 
   function showChip() {
     if (!chipCard || !document.contains(chipCard)) return;
-    let chip = chipCard.querySelector('.ct-chip');
+    let chip = ui.chip;
     if (!chip) {
       chip = document.createElement('button');
       chip.type = 'button';
       chip.className = 'ct-chip';
       chip.title = 'Save to Watch Later';
       chip.setAttribute('aria-label', 'Save to Watch Later');
-      chipCard.appendChild(chip);
+      document.documentElement.appendChild(chip);
+      ui.chip = chip;
     }
-    chipCard.classList.add('ct-chip-host');
+    positionChip();
     chip.classList.add('ct-chip--show');
+    document.addEventListener('scroll', positionChip, true);
+  }
+
+  function positionChip() {
+    const chip = ui.chip;
+    if (!chip || !chipCard) return;
+    if (!document.contains(chipCard)) {
+      clearChip();
+      return;
+    }
+    const r = chipCard.getBoundingClientRect();
+    if (r.width === 0) {
+      clearChip();
+      return;
+    }
+    chip.style.left = Math.round(r.left + 8) + 'px';
+    chip.style.top = Math.round(r.top + 8) + 'px';
   }
 
   function clearChip() {
     clearTimeout(chipTimer);
-    if (chipCard) {
-      const chip = chipCard.querySelector('.ct-chip');
-      if (chip) chip.classList.remove('ct-chip--show');
-      chipCard = null;
-    }
+    if (ui.chip) ui.chip.classList.remove('ct-chip--show');
+    document.removeEventListener('scroll', positionChip, true);
+    chipCard = null;
   }
 
   document.addEventListener('click', e => {
     const chip = e.target.closest && e.target.closest('.ct-chip');
-    if (!chip) return;
+    if (!chip || !chipCard) return;
     e.preventDefault();
     e.stopPropagation();
-    const card = chip.closest(CARD_SELECTORS);
+    const card = document.contains(chipCard) ? chipCard : null;
+    if (!card) return;
     const video = extractVideo(card);
     if (!video) return;
     saveInstant(video, chip);

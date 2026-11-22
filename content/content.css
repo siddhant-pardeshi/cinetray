@@ -480,12 +480,11 @@ html.ct-drag-active::before {
 
 /* ---------------------------------------------------------- hover chip */
 
-.ct-chip-host { position: relative; }
-
+/* One shared chip, portaled to the document root and pinned to the hovered
+   card's corner — YouTube's floating hover-preview player paints above
+   anything left inside the card, so the chip cannot live there. */
 .ct-chip {
-  position: absolute;
-  top: 8px;
-  left: 8px;
+  position: fixed;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -493,7 +492,7 @@ html.ct-drag-active::before {
   background: rgba(12, 13, 18, 0.72);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  z-index: 3;
+  z-index: 999999;
   cursor: pointer;
   opacity: 0;
   transform: scale(0.6);
@@ -532,6 +531,12 @@ html.ct-drag-active::before {
   transform: translate(-50%, -50%) rotate(45deg);
   width: 2px;
   height: 10px;
+}
+
+/* The chip is a hover affordance; on touch-only devices it would linger
+   after every tap, so it stays off entirely. */
+@media (hover: none) {
+  .ct-chip { display: none; }
 }
 
 /* -------------------------------------------------------- reduced motion */

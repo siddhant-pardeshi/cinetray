@@ -56,7 +56,7 @@ Only Chromium-based browsers are supported (Chrome, Edge, Brave — anything tha
 - **Drag:** press a card, move a few pixels — the dock appears.
 - **Hold:** press and don't move for ~0.4 s — the card lifts under a stationary cursor, handy on trackpads.
 - **New playlist mid-drag:** hover the dashed well, type a name, press Enter. The playlist is created and the card files itself.
-- **Escape hatch:** release over nothing and the card flies home; nothing is saved.
+- **Escape hatch:** release over nothing and the card flies home; nothing is saved. **Escape** cancels a drag from the keyboard too.
 - **Keyboard:** `/` focuses the search field in the dashboard.
 - **Settings:** toolbar icon → Open dashboard → Settings. Toggles for the hover chip, player long-press, undo button, dock side (left/right) and animations (full/off).
 
@@ -106,7 +106,8 @@ popup/                 compact toolbar popup: playlist list, quick create, two t
 dashboard/             full management page (rename, reorder, search, import/export,
                        settings, reset)
 tools/make_icons.py    regenerates assets/icons/*.png, stdlib-only PNG writer
-tools/smoke/e2e.cjs    CDP end-to-end test (see below)
+tools/smoke/e2e.cjs    ten-scenario CDP regression suite (see below)
+tools/smoke/probe.cjs  diagnostic probe for hit-testing and chip behavior
 docs/                  the animated SVGs and screenshots used in this README
 ```
 
@@ -114,7 +115,7 @@ There is no build step, no bundler, no framework — plain HTML/CSS/JS that a br
 
 ## Testing it
 
-`tools/smoke/e2e.cjs` drives a real headless Chrome over the DevTools Protocol: it loads the unpacked extension, opens a YouTube search, performs an actual pointer-drag of a video card into the dock, drops it on the Watch Later well, and asserts the write landed in `chrome.storage` via the service worker. It also exercises the duplicate guard, the dashboard views and the popup.
+`tools/smoke/e2e.cjs` is a ten-scenario regression suite that drives a real headless Chrome over the DevTools Protocol. It loads the unpacked extension, opens a YouTube search, and — with genuine synthesized pointer input — covers: hover-chip save (against YouTube's hover-preview player, which it found and fixed), drag released over nothing (cancel), Escape-to-cancel, drag-and-drop onto Watch Later, creating a playlist mid-drag from the dashed well, the duplicate guard, the context-menu lookup data path, watch-page player long-press with a clean cancel, the dashboard's saved state, and popup stats plus a settings toggle round-trip. Every save assertion is checked against `chrome.storage` through the service worker. `tools/smoke/probe.cjs` is the diagnostic probe used while chasing hit-testing issues.
 
 ```bash
 chrome --headless=new --remote-debugging-port=9222 \
@@ -126,12 +127,13 @@ CDP_PORT=9222 node tools/smoke/e2e.cjs
 
 (The `--enable-unsafe-extension-debugging` flag plus CDP `Extensions.loadUnpacked` is how unpacked extensions are loaded on Chrome 137+, where `--load-extension` was removed from branded builds.) Screenshots from the run land in `tools/smoke/out/`; the ones embedded above came from exactly that pipeline.
 
-Last full run verified: extension boot, content-script injection, dock appearance mid-drag, save with correct title/channel metadata, duplicate detection, dashboard welcome + playlist views, popup stats.
+Last full run: all ten scenarios green, ending with `popup stats count all saved videos: "3 videos · 2 playlists"`.
 
 ## Compatibility notes
 
-- Built for Manifest V3, minimum Chrome 102.
-- YouTube ships several generations of card markup (`ytd-rich-grid-media`, `ytd-video-renderer`, `yt-lockup-view-model`); the selectors cover all of them and fall back to heading/aria-label text when class names drift again.
+- Built for Manifest V3, minimum Chrome 111 (the dock and dashboard use `color-mix()`).
+- The hover chip is portaled to the document root and pinned over the hovered card, because YouTube's hover-preview player mounts a floating element that outranks anything left inside the card's subtree.
+- YouTube ships several generations of card markup (`ytd-rich-grid-media`, `ytd-video-renderer`, `yt-lockup-view-model`) and several link shapes (`watch?v=`, `youtu.be`, `/shorts/`, `/live/`); the selectors cover all of them and fall back to heading/aria-label text when class names drift again.
 - The extension never touches YouTube's own buttons or network calls — if it were ever uninstalled, YouTube is exactly as it was and the export file still has your playlists.
 
 ## Ideas on the board

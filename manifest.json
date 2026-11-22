@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "CineTray",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Press and drag any YouTube video into a floating dock to file it under Watch Later or a playlist. Everything stays on your machine.",
-  "minimum_chrome_version": "102",
+  "minimum_chrome_version": "111",
   "icons": {
     "16": "assets/icons/icon16.png",
     "32": "assets/icons/icon32.png",

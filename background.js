@@ -93,7 +93,7 @@ async function opCreatePlaylist(name) {
   const list = await loadPlaylists();
   const existing = list.find(p => p.name.toLowerCase() === name.toLowerCase());
   if (existing) return { ok: true, playlistId: existing.id, playlistName: existing.name, existed: true };
-  const pl = newPlaylist(name, Math.max(0, list.length - 1));
+  const pl = newPlaylist(name, list.length);
   list.push(pl);
   await savePlaylists(list);
   return { ok: true, playlistId: pl.id, playlistName: pl.name };
