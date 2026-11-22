@@ -12,3 +12,5 @@ tools/video/narr/
 tools/video/segs/
 tools/video/slides/
 tools/video/caps/
+tools/video/fonts/
+__pycache__/
