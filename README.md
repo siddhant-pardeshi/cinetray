@@ -10,28 +10,30 @@ Everything is stored locally in `chrome.storage`. No sign-in, no account access,
 
 ## ▶ Watch the narrated walkthrough
 
-**[docs/walkthrough.mp4](docs/walkthrough.mp4)** — a five-minute voice-over tour of the whole build, captured from the real extension. Click the link and GitHub plays it right on the file page; use the download button there to keep a copy.
+[![CineTray walkthrough — click to watch](docs/walkthrough-poster.jpg)](docs/walkthrough.mp4)
+
+**[docs/walkthrough.mp4](docs/walkthrough.mp4)** — a 4½-minute voice-over tour of the whole build, recorded live from the real extension. Click the poster above or the link, and GitHub plays it right on the file page; the download button there keeps a copy. This is not a slideshow: the drag-and-drop, the dock sliding in, mid-drag playlist creation, Escape cancel, undo, the dashboard navigation and the settings flips are all captured as they happen.
 
 - **Voice:** a friendly female narrator (synthesized locally with Windows SAPI — no cloud services involved)
-- **Captions:** every section is captioned — [`docs/walkthrough.vtt`](docs/walkthrough.vtt) ships alongside the video, and the full transcript is at the bottom of this page
-- **Covers:** installation, the drag gesture, the dock and wells, mid-drag playlist creation, cancel/Escape/undo, the hover chip, right-click saving, player long-press, the dashboard, popup and badge, and the privacy model
+- **Captions:** burned into every frame, plus [`docs/walkthrough.vtt`](docs/walkthrough.vtt) for players that support caption files; the full transcript is at the bottom of this page
+- **Covers:** installation (performed on camera), the drag gesture, the dock and wells, mid-drag playlist creation, cancel/Escape/undo, the hover chip, right-click saving, player long-press, the dashboard and its settings, popup and badge, and the privacy model
 
 | Chapter | Starts at |
 | --- | --- |
 | Meet CineTray | 0:00 |
-| Why it exists | 0:27 |
+| Why it exists | 0:28 |
 | Install in Chrome | 0:49 |
-| The gesture | 1:23 |
-| The dock | 1:46 |
-| Create a playlist mid-drag | 2:13 |
-| Cancel and undo | 2:31 |
-| The hover chip | 2:52 |
-| Right-click saving | 3:07 |
-| Player long-press | 3:22 |
-| The dashboard | 3:37 |
-| Popup and badge | 4:21 |
-| Privacy | 4:37 |
-| Outro | 4:58 |
+| The gesture | 1:20 |
+| The dock | 1:33 |
+| Create a playlist mid-drag | 1:51 |
+| Cancel and undo | 2:03 |
+| The hover chip | 2:18 |
+| Right-click saving | 2:34 |
+| Player long-press | 2:49 |
+| The dashboard | 3:05 |
+| Popup and badge | 3:28 |
+| Privacy | 3:45 |
+| Outro | 4:06 |
 
 The video is generated entirely from this repository — `tools/video/` holds the narration script, the Zira voice-over synthesizer (`speak.ps1`), the CDP frame-capture harness, the slide renderer and the ffmpeg assembly pipeline, so the walkthrough can be rebuilt any time the extension changes. Only the finished video and the pipeline sources are tracked; frames, slides and audio clips are regenerable intermediates.
 
@@ -194,7 +196,7 @@ Last full run: all ten scenarios green, ending with `popup stats count all saved
 
 ## Rebuilding the walkthrough video
 
-`tools/video/` is a self-contained pipeline: `script/*.txt` holds the narration, `speak.ps1` synthesizes it with Microsoft Zira, `capture.cjs` photographs the real extension at 720p over CDP, `build_slides.cjs` composes captioned slides, and `assemble.cjs` cuts the segments (slow zoom, dip-to-black fades, padded narration) and concatenates them into `docs/walkthrough.mp4`. `make_vtt.cjs` regenerates the caption file. Each stage writes plain files you can inspect and re-run.
+`tools/video/` is a self-contained pipeline: `script/*.txt` holds the narration, `speak.ps1` synthesizes it with Microsoft Zira, `record.cjs` performs the interactions on the real extension over CDP and photographs every moment (polling `captureScreenshot` — headless screencast proved unusable, pushing only 3 frames per section), `build_slides.cjs` composes the designed cards, and `assemble.cjs` cuts motion segments and slides together (Ken Burns drift, dip-to-black fades, burned-in captions, padded narration) into `docs/walkthrough.mp4`. `make_vtt.cjs` regenerates the caption file from the exact segment starts. Each stage writes plain files you can inspect and re-run.
 
 ## Compatibility notes
 
@@ -216,31 +218,31 @@ Last full run: all ten scenarios green, ending with `popup stats count all saved
 
 **[0:00] Meet CineTray** — Hi there, and welcome to CineTray! CineTray is a tiny Chrome extension that turns saving YouTube videos into a single, delightful gesture. Instead of opening menus and hunting for buttons, you simply press a video, drag it onto a dock, and drop it into Watch Later or any playlist you like. Let me walk you through everything, step by step.
 
-**[0:27] Why it exists** — Saving a video the normal way takes three clicks: open the three-dot menu, choose Save to Watch Later, then pick a playlist. And there is nothing visual about it. CineTray replaces all of that with one smooth drag-and-drop motion, and it makes your collection feel alive while you build it.
+**[0:28] Why it exists** — Saving a video the normal way takes three clicks: open the three-dot menu, choose Save to Watch Later, then pick a playlist. And there is nothing visual about it. CineTray replaces all of that with one smooth drag-and-drop motion, and it makes your collection feel alive while you build it.
 
 **[0:49] Install in Chrome** — Installing CineTray takes less than a minute. First, download or clone the project folder from GitHub. Second, open Chrome and type chrome dash extensions into the address bar. Third, switch on Developer mode in the top right corner. Fourth, click Load unpacked, and select the folder you downloaded. That is it! CineTray now lives in your toolbar. Open YouTube, and you are ready to go.
 
-**[1:23] The gesture** — Now for the fun part. Hover any video on YouTube, on the home page, in search results, anywhere. Press and hold, and move your mouse just a little. The video lifts out of its slot as a floating card that follows your cursor, and a glass dock slides in from the right side of the screen.
+**[1:20] The gesture** — Now for the fun part. Hover any video on YouTube, on the home page, in search results, anywhere. Press and hold, and move your mouse just a little. The video lifts out of its slot as a floating card that follows your cursor, and a glass dock slides in from the right side of the screen.
 
-**[1:46] The dock** — This dock is your filing cabinet. At the top sits Watch Later, with a live count. Below it, every playlist you have created gets its own well, decorated with cover art from your latest saves. As your cursor gets close, a well inflates and glows to invite the drop. Release the card over one, and watch it arc in with a burst of sparkles.
+**[1:33] The dock** — The dock is your filing cabinet. Glide across it with me: Watch Later with a live count, then a well for every playlist, each one glowing as the card comes close. And the dashed well at the bottom is where new playlists are born.
 
-**[2:13] Create a playlist mid-drag** — You can even create a brand new playlist without letting go of the mouse. Hover the dashed well at the bottom of the dock, type a name, and press Enter. The playlist appears instantly, and your card files itself straight into it.
+**[1:51] Create a playlist mid-drag** — You can even create a playlist without letting go: hover the dashed well, type a name, press Enter, and the card files itself straight in.
 
-**[2:31] Cancel and undo** — Changed your mind? Release the card anywhere else, and it flies gently back to where it came from. Nothing is saved. Pressing Escape works too. And if you saved something by mistake, the confirmation toast includes an Undo button for a few seconds.
+**[2:03] Cancel and undo** — Changed your mind? Escape flies the card home, nothing saved. And watch this: drop one in, press Undo, and it hops right back out of the list.
 
-**[2:52] The hover chip** — Prefer one click saving? Rest your cursor on a video card, and a small plus button appears in the corner. One click saves the video straight to Watch Later, complete with sparkles.
+**[2:18] The hover chip** — Prefer one click saving? Rest your cursor on a video card, and a small plus button appears in the corner. One click saves the video straight to Watch Later, complete with sparkles.
 
-**[3:07] Right-click saving** — You can also right click any video link or thumbnail, and choose CineTray from the menu. Save it to Watch Later, or straight into one of your playlists, without even hovering the card first.
+**[2:34] Right-click saving** — You can also right click any video link or thumbnail, and choose CineTray from the menu. Save it to Watch Later, or straight into one of your playlists, without even hovering the card first.
 
-**[3:22] Player long-press** — On a watch page, you do not even need the list around. Press and hold inside the video player for half a second, and the current video lifts up, ready to drop into any well in the dock.
+**[2:49] Player long-press** — On a watch page, you do not even need the list around. Press and hold inside the video player for half a second, and the current video lifts up, ready to drop into any well in the dock.
 
 **[3:37] The dashboard** — The dashboard is mission control. Click the CineTray icon and choose Open dashboard. On the left you will find every playlist with its own color and count. Pick one to browse its videos, rename it, drag rows to reorder them, or remove anything you do not want. Open All launches up to twelve videos at once. You can search across every playlist from the box on the left, and export or import your whole collection as a single JSON file. Settings let you fine tune the hover chip, player dragging, the undo button, which side the dock slides from, and the animations.
 
-**[4:21] Popup and badge** — The little toolbar popup gives you a quick glance: how many videos you have saved, every playlist with its count, and a fast way to create a new one. The toolbar badge counts your whole collection, too.
+**[3:28] Popup and badge** — The popup is the quick glance: total saves, and every playlist. Watch me type a new playlist name right here, and it appears instantly. The toolbar badge counts the whole collection.
 
-**[4:37] Privacy** — One important thing. CineTray is completely local. Your playlists live inside your own browser. No accounts, no sign in, and the extension never talks to any server. Export your collection any time. The file is yours.
+**[3:45] Privacy** — One important thing. CineTray is completely local. Your playlists live inside your own browser. No accounts, no sign in, and the extension never talks to any server. Export your collection any time. The file is yours.
 
-**[4:58] Outro** — And that is CineTray! Press, drag, drop, and enjoy your beautifully organized video shelf. The full project, with this walkthrough video and the complete documentation, is on GitHub. Happy collecting!
+**[4:06] Outro** — And that is CineTray! Press, drag, drop, and enjoy your beautifully organized video shelf. The full project, with this walkthrough video and the complete documentation, is on GitHub. Happy collecting!
 
 </details>
 

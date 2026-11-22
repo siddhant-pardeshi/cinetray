@@ -11,62 +11,62 @@ Hi there, and welcome to CineTray! CineTray is a tiny Chrome extension that turn
 Saving a video the normal way takes three clicks: open the three-dot menu, choose Save to Watch Later, then pick a playlist. And there is nothing visual about it. CineTray replaces all of that with one smooth drag-and-drop motion, and it makes your collection feel alive while you build it.
 
 3
-00:00:49.422 --> 00:01:21.651
+00:00:49.422 --> 00:01:18.242
 [Install in Chrome]
-Installing CineTray takes less than a minute. First, download or clone the project folder from GitHub. Second, open Chrome and type chrome dash extensions into the address bar. Third, switch on Developer mode in the top right corner. Fourth, click Load unpacked, and select the folder you downloaded. That is it! CineTray now lives in your toolbar. Open YouTube, and you are ready to go.
+Installing CineTray takes less than a minute, and you can watch me do it right here. First, download the project folder from GitHub. Then open Chrome, and type chrome dash extensions into the address bar. On that page, flip on Developer mode, exactly like this. Click Load unpacked, pick the folder you downloaded, and CineTray appears in your list, ready to go.
 
 4
-00:01:22.951 --> 00:01:44.583
+00:01:19.542 --> 00:01:29.525
 [The gesture]
-Now for the fun part. Hover any video on YouTube, on the home page, in search results, anywhere. Press and hold, and move your mouse just a little. The video lifts out of its slot as a floating card that follows your cursor, and a glass dock slides in from the right side of the screen.
+Now for the fun part. Press any video and move a little: the card lifts and follows your cursor, and the dock slides in from the right.
 
 5
-00:01:45.883 --> 00:02:11.738
+00:01:30.825 --> 00:01:47.352
 [The dock]
-This dock is your filing cabinet. At the top sits Watch Later, with a live count. Below it, every playlist you have created gets its own well, decorated with cover art from your latest saves. As your cursor gets close, a well inflates and glows to invite the drop. Release the card over one, and watch it arc in with a burst of sparkles.
+The dock is your filing cabinet. Glide across it with me: Watch Later with a live count, then a well for every playlist, each one glowing as the card comes close. And the dashed well at the bottom is where new playlists are born.
 
 6
-00:02:13.038 --> 00:02:29.310
+00:01:48.652 --> 00:01:58.935
 [Create a playlist mid-drag]
-You can even create a brand new playlist without letting go of the mouse. Hover the dashed well at the bottom of the dock, type a name, and press Enter. The playlist appears instantly, and your card files itself straight into it.
+You can even create a playlist without letting go: hover the dashed well, type a name, press Enter, and the card files itself straight in.
 
 7
-00:02:30.610 --> 00:02:50.467
+00:02:00.235 --> 00:02:13.223
 [Cancel and undo]
-Changed your mind? Release the card anywhere else, and it flies gently back to where it came from. Nothing is saved. Pressing Escape works too. And if you saved something by mistake, the confirmation toast includes an Undo button for a few seconds.
+Changed your mind? Escape flies the card home, nothing saved. And watch this: drop one in, press Undo, and it hops right back out of the list.
 
 8
-00:02:51.767 --> 00:03:05.619
+00:02:14.523 --> 00:02:28.375
 [The hover chip]
 Prefer one click saving? Rest your cursor on a video card, and a small plus button appears in the corner. One click saves the video straight to Watch Later, complete with sparkles.
 
 9
-00:03:06.919 --> 00:03:20.616
+00:02:29.675 --> 00:02:43.372
 [Right-click saving]
 You can also right click any video link or thumbnail, and choose CineTray from the menu. Save it to Watch Later, or straight into one of your playlists, without even hovering the card first.
 
 10
-00:03:21.916 --> 00:03:35.348
+00:02:44.672 --> 00:02:58.105
 [Player long-press]
 On a watch page, you do not even need the list around. Press and hold inside the video player for half a second, and the current video lifts up, ready to drop into any well in the dock.
 
 11
-00:03:36.648 --> 00:04:18.937
+00:02:59.405 --> 00:03:20.701
 [The dashboard]
-The dashboard is mission control. Click the CineTray icon and choose Open dashboard. On the left you will find every playlist with its own color and count. Pick one to browse its videos, rename it, drag rows to reorder them, or remove anything you do not want. Open All launches up to twelve videos at once. You can search across every playlist from the box on the left, and export or import your whole collection as a single JSON file. Settings let you fine tune the hover chip, player dragging, the undo button, which side the dock slides from, and the animations.
+The dashboard is mission control. Open it from the toolbar, pick Watch Later, and browse everything you filed. Rows lift as you hover, and drag to reorder. And in Settings, one click flips the dock to the left side of the screen and back. Export and import live here too.
 
 12
-00:04:20.237 --> 00:04:35.029
+00:03:22.001 --> 00:03:36.339
 [Popup and badge]
-The little toolbar popup gives you a quick glance: how many videos you have saved, every playlist with its count, and a fast way to create a new one. The toolbar badge counts your whole collection, too.
+The popup is the quick glance: total saves, and every playlist. Watch me type a new playlist name right here, and it appears instantly. The toolbar badge counts the whole collection.
 
 13
-00:04:36.329 --> 00:04:55.975
+00:03:37.639 --> 00:03:57.285
 [Privacy]
 One important thing. CineTray is completely local. Your playlists live inside your own browser. No accounts, no sign in, and the extension never talks to any server. Export your collection any time. The file is yours.
 
 14
-00:04:57.275 --> 00:05:14.827
+00:03:58.585 --> 00:04:16.137
 [Outro]
 And that is CineTray! Press, drag, drop, and enjoy your beautifully organized video shelf. The full project, with this walkthrough video and the complete documentation, is on GitHub. Happy collecting!
 

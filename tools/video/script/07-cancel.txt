@@ -1,1 +1,1 @@
-Changed your mind? Release the card anywhere else, and it flies gently back to where it came from. Nothing is saved. Pressing Escape works too. And if you saved something by mistake, the confirmation toast includes an Undo button for a few seconds.
+Changed your mind? Escape flies the card home, nothing saved. And watch this: drop one in, press Undo, and it hops right back out of the list.

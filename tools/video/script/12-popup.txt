@@ -1,1 +1,1 @@
-The little toolbar popup gives you a quick glance: how many videos you have saved, every playlist with its count, and a fast way to create a new one. The toolbar badge counts your whole collection, too.
+The popup is the quick glance: total saves, and every playlist. Watch me type a new playlist name right here, and it appears instantly. The toolbar badge counts the whole collection.
