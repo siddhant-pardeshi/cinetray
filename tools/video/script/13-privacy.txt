@@ -1,0 +1,1 @@
+One important thing. CineTray is completely local. Your playlists live inside your own browser. No accounts, no sign in, and the extension never talks to any server. Export your collection any time. The file is yours.

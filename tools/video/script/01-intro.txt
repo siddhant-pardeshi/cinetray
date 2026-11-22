@@ -1,0 +1,1 @@
+Hi there, and welcome to CineTray! CineTray is a tiny Chrome extension that turns saving YouTube videos into a single, delightful gesture. Instead of opening menus and hunting for buttons, you simply press a video, drag it onto a dock, and drop it into Watch Later or any playlist you like. Let me walk you through everything, step by step.

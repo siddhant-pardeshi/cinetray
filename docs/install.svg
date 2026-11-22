@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-label="Animated install guide: open chrome://extensions, turn on Developer mode, click Load unpacked, and CineTray appears">
+  <defs>
+    <linearGradient id="in-accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4d6d"/>
+      <stop offset="1" stop-color="#9b5cff"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .panel   { fill: #101118; stroke: rgba(255,255,255,0.08); }
+    .stepno  { font: 700 13px 'Segoe UI', Arial, sans-serif; fill: #fff; }
+    .stepttl { font: 600 17px 'Segoe UI', Arial, sans-serif; fill: #e9eaf0; }
+    .stepsb  { font: 400 12px 'Segoe UI', Arial, sans-serif; fill: #8f95ab; }
+    .urlbar  { fill: #1b1c26; stroke: rgba(255,255,255,0.12); }
+    .urltext { font: 500 14px Consolas, 'Courier New', monospace; fill: #c9ccd8; }
+    .togglelbl { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #c9ccd8; }
+    .btn     { fill: #1b1c26; stroke: rgba(255,255,255,0.16); }
+    .btntxt  { font: 600 13px 'Segoe UI', Arial, sans-serif; fill: #e9eaf0; }
+
+    .btnpress { animation: in-press 9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes in-press {
+      0%, 66% { transform: scale(1); }
+      70% { transform: scale(0.94); }
+      74%, 92% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+    .folder  { animation: in-folder 9s cubic-bezier(.3,.7,.3,1) infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes in-folder {
+      0%, 72% { transform: translate(-90px, 40px) scale(0.6); opacity: 0; }
+      80% { transform: translate(0px, 0px) scale(1); opacity: 1; }
+      88% { transform: translate(0px, -6px) scale(1.04); opacity: 1; }
+      94% { transform: translate(0px, 0px) scale(1); opacity: 1; }
+      100% { transform: translate(0px, 0px) scale(0.8); opacity: 0; }
+    }
+    .cardpop { animation: in-cardpop 9s cubic-bezier(.3,.7,.3,1.4) infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes in-cardpop {
+      0%, 80% { transform: scale(0.3); opacity: 0; }
+      86%, 93% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.3); opacity: 0; }
+    }
+    .cardcheck { animation: in-check 9s ease-out infinite; }
+    @keyframes in-check {
+      0%, 88% { stroke-dashoffset: 22; }
+      93%, 97% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 22; }
+    }
+  </style>
+
+  <rect width="1200" height="420" fill="#0a0a10"/>
+
+  <!-- step 1: type chrome://extensions -->
+  <g transform="translate(32 32)">
+    <rect width="360" height="356" rx="18" class="panel"/>
+    <circle cx="36" cy="44" r="16" fill="url(#in-accent)"/>
+    <text x="36" y="49" text-anchor="middle" class="stepno">1</text>
+    <text x="64" y="50" class="stepttl">Open the extensions page</text>
+    <text x="36" y="82" class="stepsb">type the address, press Enter</text>
+    <g>
+      <rect x="30" y="112" width="300" height="42" rx="21" class="urlbar"/>
+      <circle cx="54" cy="133" r="7" fill="none" stroke="#8f95ab" stroke-width="2"/>
+      <line x1="59" y1="138" x2="64" y2="143" stroke="#8f95ab" stroke-width="2" stroke-linecap="round"/>
+      <clipPath id="in-urlclip"><rect x="72" y="112" width="240" height="42"/></clipPath>
+      <g clip-path="url(#in-urlclip)">
+        <text x="76" y="139" class="urltext">chrome://extensions</text>
+        <rect x="76" y="121" width="172" height="24" fill="#1b1c26">
+          <animate attributeName="x" values="76;76;248;248" keyTimes="0;0.22;0.45;1" dur="9s" calcMode="discrete" repeatCount="indefinite"/>
+          <animate attributeName="width" values="172;172;0;0" keyTimes="0;0.22;0.45;1" dur="9s" calcMode="discrete" repeatCount="indefinite"/>
+        </rect>
+        <rect x="76" y="121" width="2" height="22" fill="#ff8fa3">
+          <animate attributeName="x" values="76;76;248;248" keyTimes="0;0.22;0.45;1" dur="9s" calcMode="discrete" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="1;1;0;0;1;1;0;0;1;1;0;0" keyTimes="0;0.02;0.04;0.06;0.08;0.1;0.12;0.14;0.16;0.18;0.2;1" dur="9s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+    </g>
+    <text x="36" y="196" class="stepsb">or: menu &#8594; Extensions &#8594; Manage Extensions</text>
+    <g transform="translate(66 230)">
+      <rect width="230" height="52" rx="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)"/>
+      <rect x="14" y="14" width="24" height="24" rx="5" fill="none" stroke="#8f95ab" stroke-width="2"/>
+      <path d="M20 21 h12 v6 h-12 z M22 23 h8 v2 h-8 z" fill="#8f95ab"/>
+      <text x="52" y="32" class="togglelbl">CineTray 1.0.1</text>
+      <text x="52" y="44" class="stepsb">appears here once loaded</text>
+    </g>
+  </g>
+
+  <!-- step 2: developer mode -->
+  <g transform="translate(420 32)">
+    <rect width="360" height="356" rx="18" class="panel"/>
+    <circle cx="36" cy="44" r="16" fill="url(#in-accent)"/>
+    <text x="36" y="49" text-anchor="middle" class="stepno">2</text>
+    <text x="64" y="50" class="stepttl">Turn on Developer mode</text>
+    <text x="36" y="82" class="stepsb">the switch sits top-right on that page</text>
+    <g transform="translate(92 150)">
+      <rect x="0" y="0" width="176" height="120" rx="12" fill="#14151f" stroke="rgba(255,255,255,0.10)"/>
+      <text x="18" y="66" class="togglelbl">Developer mode</text>
+      <rect x="120" y="42" width="42" height="24" rx="12" fill="#3a1f2b" stroke="rgba(255,77,109,0.4)">
+        <animate attributeName="fill" values="#3a1f2b;#ff4d6d;#ff4d6d;#3a1f2b" keyTimes="0;0.58;0.9;1" dur="9s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="131" cy="54" r="9" fill="#e9eaf0">
+        <animate attributeName="cx" values="131;157;157;131" keyTimes="0;0.58;0.9;1" dur="9s" calcMode="spline" keySplines="0.3 0.7 0.3 1.3;0 0 1 1;0 0 1 1" repeatCount="indefinite"/>
+      </circle>
+      <text x="18" y="100" class="stepsb">Load unpacked appears once it is on</text>
+    </g>
+  </g>
+
+  <!-- step 3: load unpacked -->
+  <g transform="translate(808 32)">
+    <rect width="360" height="356" rx="18" class="panel"/>
+    <circle cx="36" cy="44" r="16" fill="url(#in-accent)"/>
+    <text x="36" y="49" text-anchor="middle" class="stepno">3</text>
+    <text x="64" y="50" class="stepttl">Load the folder</text>
+    <text x="36" y="82" class="stepsb">pick the project folder and confirm</text>
+    <g class="btnpress">
+      <rect x="92" y="120" width="176" height="44" rx="12" class="btn"/>
+      <text x="180" y="147" text-anchor="middle" class="btntxt">Load unpacked</text>
+    </g>
+    <g class="folder" transform="translate(240 210)">
+      <rect width="88" height="64" rx="8" fill="#22243a" stroke="rgba(255,255,255,0.18)"/>
+      <path d="M0 14 h30 l8 10 h-38 z" fill="#2e3350"/>
+      <rect x="24" y="26" width="40" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+      <rect x="24" y="38" width="28" height="6" rx="3" fill="rgba(255,255,255,0.12)"/>
+    </g>
+    <g class="cardpop" transform="translate(60 196)">
+      <rect width="240" height="92" rx="12" fill="#14151f" stroke="rgba(255,77,109,0.55)"/>
+      <rect x="14" y="16" width="30" height="22" rx="5" fill="#ff4d6d"/>
+      <path d="M24 21 v12 l9 -6 z" fill="#fff"/>
+      <text x="54" y="30" class="togglelbl">CineTray 1.0.1</text>
+      <text x="54" y="44" class="stepsb">extension &#183; loaded unpacked</text>
+      <path d="M210 24 l6 6 11 -13" fill="none" stroke="#2ec27e" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="22" class="cardcheck"/>
+      <text x="14" y="78" class="stepsb">pin it from the puzzle-piece menu</text>
+    </g>
+    <text x="36" y="326" class="stepsb">then open youtube.com and press any video</text>
+  </g>
+</svg>

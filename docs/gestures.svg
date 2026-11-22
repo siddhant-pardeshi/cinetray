@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="Gesture guide: press and hold with a filling ring, drag with a motion trail, Escape cancels, typing in the new-playlist well">
+  <defs>
+    <linearGradient id="gs-accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff4d6d"/>
+      <stop offset="1" stop-color="#9b5cff"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .tile  { fill: #101118; stroke: rgba(255,255,255,0.08); }
+    .ttl   { font: 600 14px 'Segoe UI', Arial, sans-serif; fill: #e9eaf0; }
+    .sub   { font: 400 11.5px 'Segoe UI', Arial, sans-serif; fill: #8f95ab; }
+    .kbd   { font: 600 12px Consolas, 'Courier New', monospace; fill: #e9eaf0; }
+
+    .ring  { animation: gs-ring 3.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+    .card1 { animation: gs-card1 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes gs-ring {
+      0%   { stroke-dashoffset: 132; opacity: 0.9; }
+      55%  { stroke-dashoffset: 0; opacity: 1; }
+      75%  { stroke-dashoffset: 0; opacity: 0.2; }
+      100% { stroke-dashoffset: 132; opacity: 0; }
+    }
+    @keyframes gs-card1 {
+      0%, 8%  { transform: scale(1); }
+      20%     { transform: scale(0.95); }
+      55%     { transform: scale(0.95); }
+      70%, 100% { transform: scale(1); }
+    }
+
+    .drag2   { animation: gs-drag2 3.6s cubic-bezier(.4,.05,.3,1) infinite; }
+    @keyframes gs-drag2 {
+      0%, 10%  { transform: translate(0px, 0px); }
+      45%      { transform: translate(86px, -34px); }
+      62%      { transform: translate(112px, -40px) scale(0.5); opacity: 0.9; }
+      64%, 100%{ transform: translate(112px, -40px) scale(0.5); opacity: 0; }
+    }
+    .slot2   { animation: gs-slot2 3.6s ease-in-out infinite; }
+    @keyframes gs-slot2 {
+      0%, 12% { opacity: 0; }
+      20%, 60% { opacity: 0.9; }
+      68%, 100% { opacity: 0; }
+    }
+    .well2   { animation: gs-well2 3.6s ease-in-out infinite; }
+    @keyframes gs-well2 {
+      0%, 40% { opacity: 0.4; }
+      55%, 70% { opacity: 1; }
+      80%, 100% { opacity: 0.4; }
+    }
+
+    .esc3 { animation: gs-esc 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes gs-esc {
+      0%, 30% { transform: translateY(0); }
+      36%     { transform: translateY(3px); }
+      44%     { transform: translateY(0); }
+      100%    { transform: translateY(0); }
+    }
+    .ghost3 { animation: gs-ghost3 3.6s ease-in-out infinite; opacity: 0; transform-box: fill-box; transform-origin: center; }
+    @keyframes gs-ghost3 {
+      0%, 40% { opacity: 0; transform: scale(1); }
+      46%     { opacity: 1; }
+      58%     { opacity: 0; transform: scale(0.6); }
+      100%    { opacity: 0; }
+    }
+
+    .type4 { animation: gs-type4 5s steps(1) infinite; }
+    @keyframes gs-type4 {
+      0% { opacity: 0; } 20% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 1; }
+    }
+    .type4b { animation: gs-type4b 5s steps(1) infinite; }
+    @keyframes gs-type4b {
+      0% { opacity: 0; } 50% { opacity: 0; } 65% { opacity: 1; } 100% { opacity: 1; }
+    }
+    .enter4 { animation: gs-enter4 5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes gs-enter4 {
+      0%, 72% { transform: scale(1); }
+      78%     { transform: scale(0.9); }
+      84%     { transform: scale(1); }
+      100%    { transform: scale(1); }
+    }
+    .well4 { animation: gs-well4 5s ease-in-out infinite; }
+    @keyframes gs-well4 {
+      0%, 60% { opacity: 0.4; }
+      72%, 92% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+  </style>
+
+  <rect width="1200" height="300" fill="#0a0a10"/>
+
+  <!-- 1: press and hold -->
+  <g transform="translate(32 24)">
+    <rect width="276" height="200" rx="18" class="tile"/>
+    <g class="card1">
+      <rect x="88" y="52" width="100" height="62" rx="7" fill="url(#gs-accent)"/>
+      <path d="M130 72 v22 l16 -11 z" fill="#fff"/>
+    </g>
+    <circle cx="138" cy="83" r="21" fill="none" stroke="#ff4d6d" stroke-width="3"
+            stroke-dasharray="132" transform="rotate(-90 138 83)" class="ring"/>
+    <text x="24" y="160" class="ttl">Press &amp; hold</text>
+    <text x="24" y="180" class="sub">the ring fills, the card lifts in place</text>
+  </g>
+
+  <!-- 2: drag with trail -->
+  <g transform="translate(320 24)">
+    <rect width="276" height="200" rx="18" class="tile"/>
+    <rect class="slot2" x="60" y="66" width="86" height="52" rx="7" fill="none"
+          stroke="#ff4d6d" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <g class="well2">
+      <rect x="196" y="52" width="62" height="40" rx="8" fill="rgba(255,77,109,0.16)" stroke="rgba(255,77,109,0.65)"/>
+      <rect x="203" y="58" width="22" height="15" rx="3" fill="url(#gs-accent)" opacity="0.9"/>
+    </g>
+    <path d="M100 92 C 140 70, 170 66, 196 78" fill="none" stroke="#9b5cff" stroke-width="2" stroke-dasharray="3 6" stroke-linecap="round" opacity="0.7"/>
+    <g class="drag2">
+      <rect x="60" y="66" width="86" height="52" rx="7" fill="url(#gs-accent)"/>
+      <path d="M96 84 v16 l12 -8 z" fill="#fff"/>
+    </g>
+    <text x="24" y="160" class="ttl">Drag to a well</text>
+    <text x="24" y="180" class="sub">the dock slides in while you hold it</text>
+  </g>
+
+  <!-- 3: escape -->
+  <g transform="translate(608 24)">
+    <rect width="276" height="200" rx="18" class="tile"/>
+    <g class="ghost3">
+      <rect x="88" y="56" width="100" height="60" rx="7" fill="#181b2c" stroke="rgba(255,255,255,0.2)"/>
+      <rect x="88" y="56" width="100" height="38" rx="7" fill="url(#gs-accent)" opacity="0.8"/>
+    </g>
+    <g class="esc3" transform="translate(0 0)">
+      <rect x="108" y="120" width="60" height="40" rx="8" fill="#1b1c26" stroke="rgba(255,255,255,0.2)"/>
+      <text x="138" y="146" text-anchor="middle" class="kbd">ESC</text>
+    </g>
+    <text x="24" y="160" class="ttl">Escape cancels</text>
+    <text x="24" y="180" class="sub">the card flies home, nothing saved</text>
+  </g>
+
+  <!-- 4: new playlist mid-drag -->
+  <g transform="translate(896 24)">
+    <rect width="276" height="200" rx="18" class="tile"/>
+    <rect class="well4" x="24" y="56" width="228" height="42" rx="9" fill="rgba(155,92,255,0.14)" stroke="rgba(155,92,255,0.6)"/>
+    <text x="40" y="82" class="sub" fill="#c9ccd8">+ New playlist</text>
+    <text class="type4" x="40" y="82" font-family="Consolas, monospace" font-size="12" fill="#e9eaf0">Road trips</text>
+    <text class="type4b" x="120" y="82" font-family="Consolas, monospace" font-size="12" fill="#ff8fa3">|</text>
+    <g class="enter4">
+      <rect x="196" y="118" width="56" height="26" rx="6" fill="#1b1c26" stroke="rgba(255,255,255,0.2)"/>
+      <text x="224" y="135" text-anchor="middle" class="kbd" font-size="10">ENTER</text>
+    </g>
+    <text x="24" y="160" class="ttl">Create mid-drag</text>
+    <text x="24" y="180" class="sub">type a name, Enter, the card files itself</text>
+  </g>
+</svg>
