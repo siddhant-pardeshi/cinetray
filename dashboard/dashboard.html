@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CineTray dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="db-shell">
+
+    <aside class="db-side">
+      <div class="db-brand">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+          <rect x="1.5" y="3" width="21" height="15" rx="3.5" fill="#ff4d6d"/>
+          <path d="M10 7.2v6.6l5.6-3.3z" fill="#fff"/>
+          <rect x="4" y="19.6" width="16" height="2.6" rx="1.3" fill="#ff4d6d" opacity="0.55"/>
+        </svg>
+        <span>CineTray</span>
+      </div>
+
+      <div class="db-stats" id="db-stats"></div>
+
+      <input id="db-search" type="search" placeholder="Search videos  ( / )" autocomplete="off">
+
+      <nav id="db-nav" class="db-nav"></nav>
+
+      <div class="db-side-actions">
+        <button id="db-new" type="button">New playlist</button>
+        <div class="db-side-row">
+          <button id="db-export" type="button" title="Export playlists as JSON">Export</button>
+          <button id="db-import" type="button" title="Import from a JSON export">Import</button>
+        </div>
+        <input id="db-file" type="file" accept=".json,application/json" hidden>
+        <button id="db-settings-btn" type="button" class="db-ghost-btn">Settings</button>
+      </div>
+    </aside>
+
+    <main class="db-main" id="db-main">
+      <!-- welcome -->
+      <section id="view-welcome" class="db-view" hidden>
+        <svg class="db-welcome-art" viewBox="0 0 420 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="wg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#ff4d6d"/>
+              <stop offset="1" stop-color="#9b5cff"/>
+            </linearGradient>
+          </defs>
+          <g class="wa-card">
+            <rect x="40" y="40" width="150" height="92" rx="10" fill="#141521" stroke="rgba(255,255,255,.14)"/>
+            <rect x="40" y="40" width="150" height="60" rx="10" fill="url(#wg1)" opacity="0.85"/>
+            <path d="M106 58v24l21-12z" fill="#fff"/>
+            <rect x="52" y="110" width="86" height="7" rx="3.5" fill="rgba(255,255,255,.22)"/>
+            <rect x="52" y="122" width="52" height="6" rx="3" fill="rgba(255,255,255,.12)"/>
+          </g>
+          <path class="wa-path" d="M200 92 C 250 60, 290 60, 320 88" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2" stroke-dasharray="3 7" stroke-linecap="round"/>
+          <g class="wa-dock">
+            <rect x="300" y="28" width="104" height="140" rx="14" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.14)"/>
+            <rect x="310" y="42" width="84" height="30" rx="8" fill="#ff4d6d" opacity="0.28" stroke="rgba(255,77,109,.5)"/>
+            <rect x="310" y="80" width="84" height="30" rx="8" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)"/>
+            <rect x="310" y="118" width="84" height="30" rx="8" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.12)" stroke-dasharray="4 4"/>
+          </g>
+        </svg>
+        <h1>Your videos, one drag away</h1>
+        <p>Press and hold any video on YouTube, drop it on a well in the dock, and it is filed. Pick a playlist on the left to look inside, or create a new one below.</p>
+        <button id="db-welcome-new" type="button">Create your first playlist</button>
+      </section>
+
+      <!-- playlist -->
+      <section id="view-playlist" class="db-view" hidden>
+        <header class="db-pl-head">
+          <span class="db-pl-color" id="db-pl-color"></span>
+          <h1 id="db-pl-name" title="Click to rename"></h1>
+          <span class="db-pl-count" id="db-pl-count"></span>
+          <div class="db-pl-actions">
+            <button id="db-open-all" type="button">Open all</button>
+            <button id="db-delete" type="button" class="db-danger-btn">Delete</button>
+          </div>
+        </header>
+        <ul id="db-rows" class="db-rows"></ul>
+        <p id="db-rows-empty" class="db-rows-empty" hidden>
+          Nothing filed here yet. Head back to YouTube and drag a card onto this playlist's well.
+        </p>
+      </section>
+
+      <!-- search results -->
+      <section id="view-search" class="db-view" hidden>
+        <header class="db-pl-head">
+          <h1 id="db-search-title">Results</h1>
+          <span class="db-pl-count" id="db-search-count"></span>
+        </header>
+        <ul id="db-search-rows" class="db-rows"></ul>
+        <p id="db-search-empty" class="db-rows-empty" hidden>No video matches that search.</p>
+      </section>
+
+      <!-- settings -->
+      <section id="view-settings" class="db-view db-view--narrow" hidden>
+        <h1>Settings</h1>
+
+        <div class="db-setting">
+          <div>
+            <strong>Hover chip</strong>
+            <p>Shows a small save button on video cards when you rest the cursor on them.</p>
+          </div>
+          <label class="db-switch"><input type="checkbox" id="db-set-chip"><span></span></label>
+        </div>
+
+        <div class="db-setting">
+          <div>
+            <strong>Player drag</strong>
+            <p>Long-press inside the video player on a watch page to lift the current video.</p>
+          </div>
+          <label class="db-switch"><input type="checkbox" id="db-set-hold"><span></span></label>
+        </div>
+
+        <div class="db-setting">
+          <div>
+            <strong>Undo in toast</strong>
+            <p>Adds an undo button to the confirmation toast after each save.</p>
+          </div>
+          <label class="db-switch"><input type="checkbox" id="db-set-undo"><span></span></label>
+        </div>
+
+        <div class="db-setting">
+          <div>
+            <strong>Dock side</strong>
+            <p>Which edge the dock slides in from while you drag.</p>
+          </div>
+          <div class="db-seg" id="db-set-side">
+            <button type="button" data-v="left">Left</button>
+            <button type="button" data-v="right">Right</button>
+          </div>
+        </div>
+
+        <div class="db-setting">
+          <div>
+            <strong>Animations</strong>
+            <p>Turn off if you want everything to snap instantly.</p>
+          </div>
+          <div class="db-seg" id="db-set-anim">
+            <button type="button" data-v="full">Full</button>
+            <button type="button" data-v="off">Off</button>
+          </div>
+        </div>
+
+        <div class="db-danger-zone">
+          <div>
+            <strong>Reset everything</strong>
+            <p>Deletes every playlist and video stored by CineTray. Export first if you want a copy.</p>
+          </div>
+          <button id="db-reset" type="button" class="db-danger-btn">Reset data</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

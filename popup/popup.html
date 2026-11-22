@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>CineTray</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="pp-head">
+    <svg class="pp-mark" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+      <rect x="1.5" y="3" width="21" height="15" rx="3.5" fill="#ff4d6d"/>
+      <path d="M10 7.2v6.6l5.6-3.3z" fill="#fff"/>
+      <rect x="4" y="19.6" width="16" height="2.6" rx="1.3" fill="#ff4d6d" opacity="0.55"/>
+    </svg>
+    <div class="pp-head__text">
+      <h1>CineTray</h1>
+      <p id="pp-stats">…</p>
+    </div>
+  </header>
+
+  <div class="pp-new">
+    <input id="pp-new-name" type="text" maxlength="60" placeholder="New playlist">
+    <button id="pp-new-add" type="button" title="Create playlist">+</button>
+  </div>
+
+  <ul id="pp-list" class="pp-list"></ul>
+  <p id="pp-empty" class="pp-empty" hidden>No playlists yet — drag a video on YouTube, or create one above.</p>
+
+  <footer class="pp-foot">
+    <div class="pp-toggles">
+      <label class="pp-toggle"><input type="checkbox" id="pp-chip"><span>Hover chip</span></label>
+      <label class="pp-toggle"><input type="checkbox" id="pp-hold"><span>Player drag</span></label>
+    </div>
+    <button id="pp-open" type="button">Open dashboard</button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
